@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-CN">
+ <head>
+   <meta charset="UTF-8">
+   <link rel="stylesheet" href="/static/css/common.css">
+   <link rel="stylesheet" href="/static/css/main.css">
+   <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+   <script type="text/javascript" src="/static/js/colResizable-1.3.min.js"></script>
+   <script type="text/javascript" src="/static/js/common.js"></script>
+   
+   <script type="text/javascript">
+    jQuery.noConflict();
+      jQuery(function(){
+        jQuery(".list_table").colResizable({
+          liveDrag:true,
+          gripInnerHtml:"<div class='grip'></div>", 
+          draggingClass:"dragging", 
+          minWidth:30
+        }); 
+        jQuery("#publicmenu").click(function(){
+            jQuery.ajax({
+                url:'/syn/synmenu',
+                type: "POST",
+                data: (
+                    jQuery("#subform").serialize()
+                ),
+                dataType:"json",
+                beforeSend:function(){jQuery("#right1").html("正在生成同步……")},
+                success:function(data) {
+                    if (data.success == 1) {
+                        //window.location.href = "/index";
+                        jQuery("#right1").html(data.msg)
+                    } else {
+                         jQuery("#right1").html(data.msg)
+                    }
+                }
+            });
+        });
+        jQuery("#publicshift").click(function(){
+            jQuery.ajax({
+                url:'/syn/synshift',
+                type: "POST",
+                data: (
+                {}
+                ),
+                dataType:"json",
+                beforeSend:function(){jQuery("#right2").html("正在生成同步……")},
+                success:function(data) {
+                    if (data.success == 1) {
+                        jQuery("#right2").html(data.msg)
+                    } else {
+                         jQuery("#right2").html(data.msg)
+                    }
+                }
+            });
+        });
+          //jQuery.getJSON("/static/json/menu.json", function(result){
+        //jQuery.each(result, function(i, field){
+            //jQuery("#test").append(field.shiftname);
+    //});
+    //});
+      });
+   </script>
+   <title>Document</title>
+ </head>
+ <body>
+ <div id="test"></div>
+  <div class="container">
+     <div class="main_top">
+          <div class="main_left fl span10">
+              <div class="box pr5">
+
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" class="list_table">
+                <tr>
+                   <th width="30" colspan="2">发布&同步</th>
+                    </tr>
+
+                <tr class="tr">
+                   <td><span style="padding: 30px;"><input type="submit" value="发布&同步菜单" class="ext_btn ext_btn_submit" id="publicmenu" name="publicmenu"></span></td>
+                   <td><span style="padding: 30px;" id="right1"></span></span></td>
+                 </tr>
+                <tr class="tr">
+                   <td><span style="padding: 30px;"><input type="submit" value="发布&同步班次信息" class="ext_btn ext_btn_submit" id="publicshift" name="publicshift"></span></td>
+                   <td><span style="padding: 30px;" id="right2"></span></span></td>
+                 </tr>
+                <tr class="tr">
+                   <td><span style="padding: 30px;"><input type="submit" value="发布&同步笔试课程" class="ext_btn ext_btn_submit" id="" name="publicmenu"></span></td>
+                   <td><span style="padding: 30px;" id="right3"></span></span></td>
+                 </tr>
+                <tr class="tr">
+                   <td><span style="padding: 30px;"><input type="submit" value="发布&同步面试课程" class="ext_btn ext_btn_submit" id="" name="publicmenu"></span></td>
+                   <td><span style="padding: 30px;" id="right4"></span></span></td>
+                 </tr>
+                <tr class="tr">
+                   <td><span style="padding: 30px;"><input type="submit" value="发布&同步年份" class="ext_btn ext_btn_submit" id="publicshiftyear" name="publicshiftyear"></span></td>
+                   <td><span style="padding: 30px;" id="right1"></span></span></td>
+                 </tr>
+              </table>
+              </div>
+          </div>
+          <div class="clear"></div>
+     </div>
+   </div> 
+ </body>
+ </html>
+  

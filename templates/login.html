@@ -1,0 +1,75 @@
+$def with ()
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-CN">
+<head>
+	<meta charset="UTF-8">
+    <script type="text/javascript" src="static/js/jquery.min.js"></script>
+	<script type="text/javascript" src="static/lib/layer/layer.js"></script>
+	<link href="static/css/login.css"  rel="stylesheet"  type="text/css" media="screen" charset="utf-8"/>
+	<title>社科赛斯课程管理平台</title>
+</head>
+<body>
+	<div id="login_top">
+		<div id="welcome">
+			社科赛斯教育集团出品
+		</div>
+		<div id="back">
+			<a href="http://www.mbaschool.com.cn">备考网</a>&nbsp;&nbsp; | &nbsp;&nbsp;
+			<a href="#">帮助</a>
+		</div>
+	</div>
+	<div id="login_center">
+		<div id="login_area">
+			<div id="login_form">
+				<form action="./login" method="post" id="subform">
+					<div id="login_tip">
+						用户登录&nbsp;&nbsp;UserLogin
+					</div>
+					<div><input type="text" class="username" name="username" id="username"></div>
+					<div><input type="password" class="pwd" name="userpwd" id="userpwd"></div>
+					<div id="btn_area">
+						<input type="button" name="sub_btn" id="sub_btn" value="登&nbsp;&nbsp;录">&nbsp;&nbsp;
+
+
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<div id="login_bottom">
+		Copyright &copy; 2015 北京社科赛斯教育集团. All Rights Reserved. 中国MBA备考网 版权所有
+		Author:LHT
+	</div>
+<script>
+jQuery.noConflict();
+jQuery(document).ready(function() {
+			jQuery("#sub_btn").click(function(){
+				jQuery.ajax({
+					url:'./login',
+					type: "POST",
+					data: (
+						jQuery("#subform").serialize()
+						),
+					dataType:"json",
+					beforeSend:function(){
+						var username=jQuery("#username").val()
+						var usepwd=jQuery("#usepwd").val()
+						if(username==""||usepwd==""){
+							layer.msg('请输入用户名/密码');
+							return false;
+						}
+
+					},
+					success:function(data) {
+						if (data.success == 1) {
+							window.location.href = "/index";
+						} else {
+							alert("用户名或者密码错误");
+						}
+					}
+				});
+			})
+})
+</script>
+</body>
+</html>

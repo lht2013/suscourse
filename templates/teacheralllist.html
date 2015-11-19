@@ -1,0 +1,122 @@
+$def with (teacher_list)
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-CN">
+ <head>
+   <meta charset="UTF-8">
+   <link rel="stylesheet" href="/static/css/common.css">
+   <link rel="stylesheet" href="/static/css/main.css">
+   <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+   <script type="text/javascript" src="/static/js/colResizable-1.3.min.js"></script>
+   <script type="text/javascript" src="/static/js/common.js"></script>
+   <link rel="stylesheet" type="text/css" href="/static/js/SimpleTree1.3/js/tree_themes/SimpleTree.css"/>
+   <script type="text/javascript" src="/static/js/SimpleTree1.3/js/SimpleTree.js"></script>
+   <script type="text/javascript">
+    jQuery.noConflict();
+      jQuery(function(){
+        jQuery(".list_table").colResizable({
+          liveDrag:true,
+          gripInnerHtml:"<div class='grip'></div>", 
+          draggingClass:"dragging", 
+          minWidth:30
+        }); 
+        jQuery("#add").click(function(){
+            window.location.href="/course/courseadd";
+        });
+        jQuery("#del").click(function(){
+            var chk_value =[];
+                jQuery('input[name="idstr"]:checked').each(function(){
+                chk_value.push(jQuery(this).val());
+            });
+            if (chk_value.length==0){
+                alert("你还没有选中任何内容");
+            }else{
+                if(confirm("确定删除选中信息，删除后不可恢复！")) {
+                    jQuery.ajax({
+                        url: '/course/coursedel',
+                        type: "POST",
+                        data: ({idstr: chk_value.join(",")}),
+                        dataType: "json",
+                        beforeSend: function () {
+                        },
+                        success: function (data) {
+                            if (data.success == 1) {
+                                alert("删除成功")
+                                window.location.reload()
+                            } else {
+                                alert("删除失败");
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        jQuery("#edit").click(function(){
+            var chk_value =[];
+                jQuery('input[name="idstr"]:checked').each(function(){
+                chk_value.push(jQuery(this).val());
+            });
+            if (chk_value.length!==1){
+                alert("只能选择一项操作");
+            }else{
+                window.location.href="/course/courseedit/"+chk_value;
+            }
+        });
+    jQuery(".st_tree").SimpleTree({
+		click:function(a){
+			if(!jQuery(a).attr("hasChild")){
+                //jQuery(a).attr("ref")
+
+            }
+            //window.top.rightlistMain.location.href=jQuery(a).attr("href");
+            window.open(jQuery(a).attr("href"),"rightlistMain")
+				//alert(jQuery(a).attr("ref"));
+		}
+	});
+      }); 
+   </script>
+   <title>Document</title>
+ </head>
+ <body>
+  <div class="container">
+
+  <div class="main_top">
+          <div class="main_left fl span2">
+              <div class="box pr5">
+                <div class="box_border">
+                  <div class="box_top">
+                    <div class="box_top_l fl"><b class="pl15">老师列表</b></div>
+                  </div>
+
+                    <div class="st_tree">
+<ul>
+	<li><a href="/course/coursetacherlist/1" ref="hyjm" target="rightlistMain">全部课程</a></li>
+
+
+        <ul show="true">
+            $for i in teacher_list:
+                <li><a href="/course/coursetacherlist/$i.uid/1" ref="yhgl" target="rightlistMain">$i.username</a></li>
+        </ul>
+
+</ul>
+</div>
+
+
+                </div>
+              </div>
+          </div>
+          <div class="main_right fr span8">
+
+
+
+                  <iframe name="rightlistMain" id="rightlistMain" src="/course/coursetacherlist/1" frameborder="no" scrolling="auto" width="100%" height="1000px" allowtransparency="true"></iframe>
+
+
+
+          </div>
+
+          <div class="clear"></div>
+     </div>
+  </div>
+ </body>
+ </html>
+  

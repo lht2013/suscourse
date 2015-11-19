@@ -1,0 +1,116 @@
+$def with (results_list,type,globals)
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-CN">
+ <head>
+   <meta charset="UTF-8">
+   <link rel="stylesheet" href="/static/css/common.css">
+   <link rel="stylesheet" href="/static/css/main.css">
+   <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+   <script type="text/javascript" src="/static/js/colResizable-1.3.min.js"></script>
+   <script type="text/javascript" src="/static/js/common.js"></script>
+   <script type="text/javascript">
+    jQuery.noConflict();
+      jQuery(function(){
+        jQuery(".list_table").colResizable({
+          liveDrag:true,
+          gripInnerHtml:"<div class='grip'></div>", 
+          draggingClass:"dragging", 
+          minWidth:30
+        }); 
+        jQuery("#add").click(function(){
+            window.location.href="/shift/shiftadd/$type";
+        });
+        jQuery("#del").click(function(){
+            var chk_value =[];
+                jQuery('input[name="idstr"]:checked').each(function(){
+                chk_value.push(jQuery(this).val());
+            });
+            if (chk_value.length==0){
+                alert("你还没有选中任何内容");
+            }else{
+                if(confirm("确定删除选中信息，删除后不可恢复！")) {
+                    jQuery.ajax({
+                        url: '/shift/shiftdel',
+                        type: "POST",
+                        data: ({idstr: chk_value.join(",")}),
+                        dataType: "json",
+                        beforeSend: function () {
+                        },
+                        success: function (data) {
+                            if (data.success == 1) {
+                                window.location.href = "/shift/shiftlist/1/1";
+                            } else {
+                                alert("删除失败");
+                            }
+                        }
+                    });
+                }
+            }
+        });
+        jQuery("#edit").click(function(){
+            var chk_value =[];
+                jQuery('input[name="idstr"]:checked').each(function(){
+                chk_value.push(jQuery(this).val());
+            });
+            if (chk_value.length!==1){
+                alert("只能选择一项操作");
+            }else{
+                window.location.href="/shift/shiftedit/"+chk_value;
+            }
+        });
+      }); 
+   </script>
+   <title>Document</title>
+ </head>
+ <body>
+  <div class="container">
+
+     <div id="button" class="mt10">
+       <input type="button" name="add" id="add" class="btn btn82 btn_add" value="新增">
+       <input type="button" name="del" id="del" class="btn btn82 btn_del" value="删除">
+       <input type="button" name="edit" id="edit" class="btn btn82 btn_config" value="修改">
+     </div>
+
+     <div id="table" class="mt10">
+        <div class="box span10 oh">
+              <table width="100%" border="0" cellpadding="0" cellspacing="0" class="list_table">
+                <tr>
+                   <th width="30">#</th>
+                   <th>班次名称</th>
+                   <th>班次年份</th>
+                   <th>班次类型</th>
+                   <th>状态</th>
+                   <th>创建时间</th>
+                    <th>关联班型</th>
+                </tr>
+              $ a= "1111111111111111111"
+              $for m in results_list['results_list']:
+                <tr class="tr">
+                   <td class="td_center"><input type="checkbox" name="idstr" value="$m.csid"></td>
+                   <td class="td_center">$m.shiftname</td>
+                   <td class="td_center">$m.shiftyear</td>
+                   <td class="td_center">
+                        $if m.shifttype==1:
+                            笔试
+                        $elif m.shifttype==2:
+                            面试
+                   </td>
+                   <td class="td_center">
+                        $if m.status==0:
+                            关闭
+                        $elif m.status==1:
+                            已结
+                        $else:
+                            开通
+                   </td>
+                   <td class="td_center">$globals["time"].strftime('%Y-%m-%d %H:%M:%S',globals["time"].localtime(m.createtime))</td>
+                   <td class="td_center"><a href="" class="ext_btn"><span class="add"></span>关联</a></td>
+                 </tr>
+              </table>
+            $:results_list['pagehtml']
+        </div>
+     </div>
+   </div> 
+ </body>
+ </html>
+  

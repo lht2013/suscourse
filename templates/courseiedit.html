@@ -1,0 +1,157 @@
+$def with(results,shift_list,teacher_list,globals)
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="zh-CN">
+ <head>
+   <meta charset="UTF-8">
+   <link rel="stylesheet" href="/static/css/common.css">
+   <link rel="stylesheet" href="/static/css/main.css">
+   <script type="text/javascript" src="/static/js/jquery.min.js"></script>
+   <script type="text/javascript" src="/static/js/colResizable-1.3.min.js"></script>
+   <script type="text/javascript" src="/static/js/common.js"></script>
+   <script type="text/javascript" src="/static/js/datepicker/WdatePicker.js"></script>
+   <script type="text/javascript">
+    jQuery.noConflict();
+      jQuery(function(){
+        jQuery(".list_table").colResizable({
+          liveDrag:true,
+          gripInnerHtml:"<div class='grip'></div>", 
+          draggingClass:"dragging", 
+          minWidth:30
+        }); 
+        
+      }); 
+   </script>
+   <title>面试课程修改</title>
+ </head>
+ <body>
+   <div class="box_border" >
+                    <div class="box_top">
+                        <div class="box_top_l fl"><b class="pl15">面试课程修改</b></div>
+                    </div>
+  <div class="container">
+
+            <div class="box_center">
+              <form action="./" class="jqtransform" name="subform" id="subform">
+               <table class="form_table pt15 pb15" width="100%" border="0" cellpadding="0" cellspacing="0">
+                 <tr>
+                  <td class="td_right">课程名称：</td>
+                  <td class=""> 
+                    <input type="text" name="coursename" id="coursename" class="input-text lh30" size="40" value="$results[0].coursename"><input type="hidden" name="cid" id="cid"  size="40" value="$results[0].cid">
+                  <input type="hidden" name="shifttype" id="shifttype" value="2">
+                  </td>
+                </tr>
+                <tr >
+                  <td class="td_right">班次：</td>
+                  <td class="">
+                    <span class="fl">
+                      <div class="select_border">
+                        <div class="select_containers ">
+                        <select name="csid" id="csid" class="select">
+                            $for r in shift_list:
+                                <option value="$r.csid">$r.shiftname</option>
+                        </select>
+                        </div>
+                      </div>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td_right">主讲老师：</td>
+                  <td class="">
+                    <span class="fl">
+                      <div class="select_border">
+                        <div class="select_containers ">
+                        <select name="tid" id="tid" class="select">
+                            $for r in teacher_list:
+                                <option value="$r.uid">$r.username</option>
+                        </select>
+                        </div>
+                      </div>
+                    </span>
+                  </td>
+                </tr>
+                <tr >
+                  <td class="td_right">上课日期：</td>
+                  <td class="">
+                    <span class="fl">
+                      <div class="select_border">
+                        <div class="select_containers ">
+                        <input name="coursetime" id="coursetime" class="input-text lh30" onclick="WdatePicker()" value="$globals["time"].strftime('%Y-%m-%d',globals["time"].localtime(results[0].coursetime))" />
+                        </div>
+                      </div>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td_right">上课时段：</td>
+                  <td class="">
+                    <span class="fl">
+                      <div class="select_border">
+                        <div class="select_containers ">
+                        <select name="intervaltime" id="intervaltime" class="select">
+                        <option value="上午">上午</option>
+                        <option value="下午">下午</option>
+                        <option value="晚间">晚间</option>
+                        </select>
+                        </div>
+                      </div>
+                    </span>
+                  </td>
+                </tr>
+                <tr>
+                  <td class="td_right">状态：</td>
+                  <td class="">
+                    <span class="fl">
+                      <div class="select_border">
+                        <div class="select_containers ">
+                        <select name="status" id="status" class="select">
+                        <option value="1">显示</option>
+                        <option value="0">关闭</option>
+                        </select>
+                        </div>
+                      </div>
+                    </span>
+                  </td>
+                </tr>
+                 <tr>
+                   <td class="td_right">&nbsp;</td>
+                   <td class="">
+                     <input type="button" name="sub_btn" id="sub_btn" class="btn btn82 btn_save2" value="保存">
+                    <input type="button" name="reset_btn" id="reset_btn" class="btn btn82 btn_res" value="重置">
+                   </td>
+                 </tr>
+               </table>
+               </form>
+            </div>
+          </div>
+
+   </div>
+<script>
+jQuery.noConflict();
+jQuery(document).ready(function() {
+    jQuery("#sub_btn").click(function(){
+		jQuery.ajax({
+			url:'/course/courseiedit',
+			type: "POST",
+			data: (
+				jQuery("#subform").serialize()
+			),
+			dataType:"json",
+			beforeSend:function(){},
+			success:function(data) {
+                if (data.success == 1) {
+                    alert(data.msg)
+                } else {
+                    alert(data.msg)
+                }
+		    }
+	    });
+	});
+    jQuery("#csid").val("$results[0].csid");
+    jQuery("#tid").val("$results[0].tid");
+    jQuery("#intervaltime").val("$results[0].intervaltime");
+    jQuery("#status").val("$results[0].status");
+})
+</script>
+ </body>
+ </html>
